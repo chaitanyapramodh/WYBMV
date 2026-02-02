@@ -62,12 +62,24 @@
       margin-top: 20px;
       display: none;
     }
+
+    /* new: small muted sub-note below the title */
+    .subnote {
+      font-size: 13px;
+      color: #7a7a7a;
+      margin-top: -8px;
+      margin-bottom: 14px;
+      opacity: 0.95;
+    }
   </style>
 </head>
 <body>
   <div class="card">
     <img id="topImg" src="https://media1.tenor.com/m/kutFNFXxSIsAAAAd/minion-minion-loves.gif" alt="cute" style="max-width:100%; border-radius:12px; margin-bottom:12px" />
     <h1>Will you be my Valentine Sowmssss? 💖</h1>
+
+    <!-- new sub-note under the title -->
+    <div class="subnote" id="subnote">Say "No" if you can 😉</div>
 
     <div class="buttons">
       <button id="yesBtn">Yoss 💕</button>
@@ -88,6 +100,7 @@
     const title = document.querySelector('.card h1');
     const card = document.querySelector('.card');
     const buttonsWrap = document.querySelector('.buttons');
+    const subnote = document.getElementById('subnote');
 
     // image sources (replace with your local filenames if desired)
     const imgAsking = "https://media1.tenor.com/m/kutFNFXxSIsAAAAd/minion-minion-loves.gif"; // asking state
@@ -172,6 +185,9 @@
       // change top image to reflect 'No' reaction
       topImg.src = imgNo;
 
+      // hide the subnote since user interacted
+      if (subnote) subnote.style.display = 'none';
+
       // small bounce animation to give feedback (keeps using transform so it layers with left/top)
       noBtn.animate([
         { transform: 'translateY(0)' },
@@ -185,6 +201,10 @@
       // try primary yes image, fallback will trigger if it fails
       topImg.src = imgYes;
       topImg.style.display = 'block';
+
+      // hide the subnote since user confirmed
+      if (subnote) subnote.style.display = 'none';
+
       // hide the main question/title when confirmed
       if (title) title.style.display = 'none';
       // hide buttons area to remove empty space and tighten layout
@@ -219,4 +239,3 @@
   </script>
 </body>
 </html>
-
