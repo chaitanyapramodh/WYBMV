@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Will you be my Valentine Sowmssss?</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+      width: 90%;
+      max-width: 400px;
+    }
+
+    h1 {
+      color: #ff4d6d;
+      margin-bottom: 20px;
+    }
+
+    .buttons {
+      position: relative;
+      height: 120px;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    #yesBtn {
+      background: #ff4d6d;
+      color: white;
+      margin-right: 10px;
+    }
+
+    #noBtn {
+      background: #ccc;
+      position: absolute;
+      transition: left 0.25s ease, top 0.25s ease;
+    }
+
+    .love {
+      font-size: 22px;
+      color: #ff4d6d;
+      margin-top: 20px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img id="topImg" src="https://media1.tenor.com/m/kutFNFXxSIsAAAAd/minion-minion-loves.gif" alt="cute" style="max-width:100%; border-radius:12px; margin-bottom:12px" />
+    <h1>Will you be my Valentine Sowmssss? 💖</h1>
+
+    <div class="buttons">
+      <button id="yesBtn">Yoss 💕</button>
+      <button id="noBtn">No 🙃</button>
+    </div>
+
+    <div class="love" id="loveMsg">
+      Yayyy!! 💞🥰<br/>
+      See you on Valentine’s Day ❤️
+    </div>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const loveMsg = document.getElementById("loveMsg");
+    const topImg = document.getElementById("topImg");
+    const title = document.querySelector('.card h1');
+    const card = document.querySelector('.card');
+    const buttonsWrap = document.querySelector('.buttons');
+
+    // image sources (replace with your local filenames if desired)
+    const imgAsking = "https://media1.tenor.com/m/kutFNFXxSIsAAAAd/minion-minion-loves.gif"; // asking state
+    const imgNo = "https://media1.tenor.com/m/yKHjahILJrcAAAAC/bob-bob-minion.gif"; // after No clicked
+    const imgYes = "https://c.tenor.com/ZOMv8HJPnC4AAAAd/tenor.gif"; // after Yes clicked
+
+    // Preload images to avoid delay when switching
+    const _preloaded = {};
+    [imgAsking, imgNo, imgYes].forEach(url => {
+      const img = new Image();
+      img.src = url;
+      _preloaded[url] = img;
+    });
+
+    // Fallback if imgYes fails (some hosts block hotlinking)
+    const imgYesFallback = "https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif";
+
+    // Ensure topImg shows a fallback if a src fails to load
+    topImg.addEventListener('error', () => {
+      if (topImg.src !== imgYesFallback) topImg.src = imgYesFallback;
+    });
+
+    // set initial top image
+    topImg.src = imgAsking;
+
+    let noCount = 0;
+    const phrases = [
+      "No 🙃",
+      "Anthey na ?",
+      "Asha choclate konisthe?",
+      "Sare sorry, Dairy milk Silk?",
+      "Wokay...Silk oreo?",
+      "Silk Oreo + AlienKind hotchoclate",
+      "Last and final...Silk Oreo + AlienKind hotchoclate + date night?",
+      "But :*(",
+      "Sare neeku kadu naaku kadu.. rom com movie night.. final?",
+      "Sare okay.. boyeeee",
+      "Boyeeeeeeeeeeeeeeee",
+      ":(((",
+      "PRETTY PLEASE",
+      "No :("
+    ];
+
+    function updateNoText() {
+      noBtn.textContent = phrases[Math.min(noCount, phrases.length - 1)];
+    }
+
+    function updateYesSize() {
+      const base = 16; // px
+      const size = base + noCount * 4; // grows with noCount
+      yesBtn.style.fontSize = `${size}px`;
+    }
+
+    function moveNoRandomly() {
+      // keep the button fully inside the .buttons container
+      const cRect = buttonsWrap.getBoundingClientRect();
+      const bRect = noBtn.getBoundingClientRect();
+      const maxX = Math.max(0, cRect.width - bRect.width);
+      const maxY = Math.max(0, cRect.height - bRect.height);
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+    }
+
+    // initial placement once layout is ready
+    window.addEventListener('load', () => {
+      // put No button near the right by default
+      const initX = Math.max(0, buttonsWrap.clientWidth - noBtn.offsetWidth - 10);
+      noBtn.style.left = `${initX}px`;
+      noBtn.style.top = `10px`;
+    });
+
+    // move on hover (like original), increment on click
+    noBtn.addEventListener('mouseover', moveNoRandomly);
+
+    noBtn.addEventListener('click', () => {
+      noCount++;
+      updateNoText();
+      updateYesSize();
+
+      // change top image to reflect 'No' reaction
+      topImg.src = imgNo;
+
+      // small bounce animation to give feedback (keeps using transform so it layers with left/top)
+      noBtn.animate([
+        { transform: 'translateY(0)' },
+        { transform: 'translateY(-10px)' },
+        { transform: 'translateY(0)' }
+      ], { duration: 300, easing: 'ease-out' });
+    });
+
+    yesBtn.addEventListener("click", () => {
+      // change top image and show a cute gif and message
+      // try primary yes image, fallback will trigger if it fails
+      topImg.src = imgYes;
+      topImg.style.display = 'block';
+      // hide the main question/title when confirmed
+      if (title) title.style.display = 'none';
+      // hide buttons area to remove empty space and tighten layout
+      if (buttonsWrap) buttonsWrap.style.display = 'none';
+      // reduce card padding to remove excess white space
+      if (card) card.style.padding = '18px';
+      loveMsg.innerHTML = `
+        <div style="margin-top:12px; font-size:22px; font-weight:600">WOOOOOO!!! See you on Valentine's Day!! ;))</div>
+      `;
+      loveMsg.style.display = "block";
+      noBtn.style.display = "none";
+      yesBtn.style.display = "none";
+    });
+
+    // keyboard accessibility: Enter / Space triggers buttons
+    yesBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        yesBtn.click();
+      }
+    });
+    noBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        noBtn.click();
+      }
+    });
+
+    // initialize labels and sizes
+    updateNoText();
+    updateYesSize();
+  </script>
+</body>
+</html>
